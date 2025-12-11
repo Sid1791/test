@@ -33,21 +33,28 @@
       });
 
       function screenPop() {
-        if (!window.Microsoft || !Microsoft.CIFramework) {
-          alert("CIF not available. Are you testing inside the D365 CIF panel?");
-          return;
-        }
+  if (!window.Microsoft || !Microsoft.CIFramework) {
+    alert("CIF not available. Are you testing inside D365 CIF panel?");
+    return;
+  }
 
-        // Example: open a Contact where telephone1 = 12345
-        Microsoft.CIFramework.searchAndOpenRecords("contact", "telephone1", "12345")
-          .then(function () {
-            alert("Screen pop triggered!");
-          })
-          .catch(function (e) {
-            console.error(e);
-            alert("Error from CIF: " + e);
-          });
-      }
+  var phoneNumber = "12345"; // you can later make this dynamic
+
+  var query = "?$select=fullname,telephone1" +
+              "&$filter=telephone1 eq '" + phoneNumber + "'";
+
+  Microsoft.CIFramework
+    .searchAndOpenRecords("contact", query, false, null, 1)
+    .then(function (result) {
+      console.log("Search result:", result);
+      alert("Screen pop triggered!");
+    })
+    .catch(function (e) {
+      console.error("CIF error:", e);
+      alert("Error from CIF: " + e.message);
+    });
+}
     </script>
   </body>
 </html>
+
