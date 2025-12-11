@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>CIF Demo Softphone</title>
+
+    <!-- 🔹 IMPORTANT: Load CIF library from your D365 org -->
+    <script
+      type="text/javascript"
+      src="https://orgebb4dd9e.crm8.dynamics.com/webresources/Widget/msdyn_ciLibrary.js"
+      data-crmurl="https://orgebb4dd9e.crm8.dynamics.com"
+      data-cifid="CIFMainLibrary">
+    </script>
+  </head>
+
+  <body style="font-family: Arial; padding:10px;">
+    <h2>CIF Demo Softphone</h2>
+
+    <p id="status">Checking CIF availability…</p>
+    <button onclick="screenPop()">Simulate Incoming Call</button>
+
+    <script>
+      // Show whether CIF is available
+      window.addEventListener("load", function () {
+        var status = document.getElementById("status");
+
+        if (window.Microsoft && Microsoft.CIFramework) {
+          status.textContent = "✅ CIF is available. You are inside Dynamics 365.";
+        } else {
+          status.textContent = "⚠️ CIF is NOT available. This is normal if you opened this URL directly in browser, but inside D365 it should be available.";
+        }
+      });
+
+      function screenPop() {
+        if (!window.Microsoft || !Microsoft.CIFramework) {
+          alert("CIF not available. Are you testing inside the D365 CIF panel?");
+          return;
+        }
+
+        // Example: open a Contact where telephone1 = 12345
+        Microsoft.CIFramework.searchAndOpenRecords("contact", "telephone1", "12345")
+          .then(function () {
+            alert("Screen pop triggered!");
+          })
+          .catch(function (e) {
+            console.error(e);
+            alert("Error from CIF: " + e);
+          });
+      }
+    </script>
+  </body>
+</html>
